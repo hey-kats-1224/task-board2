@@ -1,48 +1,76 @@
 # task-board2
 
-タスクボード管理アプリ。HTML/CSS/JavaScriptのみで構成されたフロントエンドアプリケーション。
+タスクボード管理アプリ。React + Vite で構築したフロントエンドアプリケーション。
+
+## デプロイ先
+
+**https://hey-kats-1224.github.io/task-board2/**
+
+`main` ブランチへプッシュすると GitHub Actions が自動でビルド＆デプロイする。
 
 ## 技術スタック
 
-- **HTML5** — 構造・マークアップ
-- **CSS3** — スタイリング・アニメーション
-- **Vanilla JavaScript (ES6+)** — ロジック・DOM操作
-- ビルドツール・フレームワーク不使用（純粋なWeb標準技術のみ）
+- **React 18** — UI コンポーネント・状態管理（useState / useEffect）
+- **Vite 6** — ビルドツール・開発サーバー
+- **CSS3** — コンポーネントごとの CSS ファイルでスタイリング
+- **localStorage** — タスクの永続化
+- **GitHub Actions** — CI/CD（`.github/workflows/deploy.yml`）
+
+## プロジェクト構成
+
+```
+task-board2/
+├── index.html
+├── vite.config.js
+├── package.json
+├── src/
+│   ├── main.jsx        # エントリーポイント
+│   ├── index.css       # グローバルスタイル（リセット・body）
+│   ├── App.jsx         # ルートコンポーネント・タスク管理ロジック
+│   └── App.css         # App コンポーネントのスタイル
+└── .github/
+    └── workflows/
+        └── deploy.yml  # GitHub Pages 自動デプロイ
+```
 
 ## 開発・実行方法
 
-ブラウザで `index.html` を直接開くか、ローカルサーバーを使用する。
-
 ```bash
-# Python を使う場合
-python -m http.server 8080
-
-# Node.js の npx を使う場合
-npx serve .
+npm install   # 初回のみ
+npm run dev   # 開発サーバー起動 → http://localhost:5173
+npm run build # プロダクションビルド（dist/）
 ```
 
 ## コーディング規約
 
 - `let` / `const` を使用し `var` は使わない
-- DOM操作は `document.querySelector` / `querySelectorAll` を使用
-- イベントリスナーは `addEventListener` で登録
-- CSSクラスの付け外しで状態管理（`classList.add/remove/toggle`）
-- グローバル変数は最小限に抑え、モジュールパターンまたはクロージャで管理
-- コメントは原則不要。WHYが非自明な場合のみ1行で記載
+- 状態管理は React の `useState` / `useEffect` を使用する
+- DOM を直接操作しない（React の仮想 DOM に委ねる）
+- コメントは原則不要。WHY が非自明な場合のみ 1 行で記載
+
+## コンポーネント命名規約
+
+| 対象 | 規約 | 例 |
+|---|---|---|
+| コンポーネントファイル | PascalCase | `App.jsx`, `TaskItem.jsx` |
+| コンポーネント関数 | PascalCase | `function TaskItem()` |
+| CSS クラス名 | BEM（ブロック__エレメント--モディファイア） | `.task-item__text`, `.task-item--done` |
+| 変数・関数名 | camelCase | `addTask`, `toggleTask`, `inputValue` |
+| ローカルストレージキー | kebab-case の定数 | `const STORAGE_KEY = 'task-board-tasks'` |
 
 ## 注意事項
 
-- 外部ライブラリ・CDN依存は原則禁止（追加する場合はユーザーに確認）
-- IE非対応、モダンブラウザ（Chrome/Firefox/Safari/Edge最新版）のみサポート
-- レスポンシブ対応必須（モバイル・PC両対応）
+- 外部ライブラリの追加はユーザーに確認してから行う
+- モダンブラウザ（Chrome / Firefox / Safari / Edge 最新版）のみサポート
+- レスポンシブ対応必須（モバイル・PC 両対応）
+- `dist/` は `.gitignore` に含めているためコミットしない
 
 ## Git 運用ルール
 
-- **コードを変更するたびに必ずGitHubへプッシュする**
-- コミットは変更単位で細かく行い、1コミット1目的を原則とする
+- **コードを変更するたびに必ず GitHub へプッシュする**
+- コミットは変更単位で細かく行い、1 コミット 1 目的を原則とする
 - コミットメッセージは日本語で記述し、変更内容を簡潔に表現する
 - `main` ブランチへ直接プッシュする（小規模プロジェクトのため）
-- プッシュ前に `git status` で変更内容を確認する
 
 ### コミット・プッシュの手順
 
@@ -51,9 +79,3 @@ git add <変更ファイル>
 git commit -m "変更内容の説明"
 git push origin main
 ```
-
-### コミットメッセージ例
-
-- `タスクカードのドラッグ&ドロップ機能を追加`
-- `カラーテーマの切り替えスタイルを修正`
-- `タスク完了フラグのローカルストレージ保存に対応`
